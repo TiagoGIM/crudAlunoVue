@@ -1,6 +1,7 @@
 import {Request,Response} from 'express';
 import { getRepository } from "typeorm";
-import Student from "../models/Student";
+import studentSchema from '../models/schemas/studentSchema';
+import Student from "../models/StudentModel";
 import students_view from '../view/students_view';
 import studentView from '../view/students_view';
 
@@ -23,7 +24,19 @@ export default{
       ra
   } = request.body;
 
+
+
   const studentRepository = getRepository(Student);
+ // validating about data from client
+  await studentSchema.validate({
+    name,
+    email,
+    cpf,
+    ra
+  }, {
+    abortEarly:false,
+  });
+
   const stundent = studentRepository.create({
       name,
       email,
